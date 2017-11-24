@@ -6,4 +6,4 @@ export const signUp = user => {
     return api.post('/users', user);
 }
 
-export const updateUser = user => api.put(`/user/${user._id}`, user);
+export const updateUser = user => api.put(`/users`, user);

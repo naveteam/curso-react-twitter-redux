@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import Tweets from '../components/Tweets';
 import { list, create } from '../redux/modules/tweets';
+import { getUser } from '../redux/modules/auth';
 
 const styles = {
     timeline: {
@@ -48,7 +49,7 @@ class Timeline extends Component {
     }
 
     async componentWillMount(){
-        await this.props.list();
+        getUser() ? await this.props.list() : this.props.history.replace('/');
     }
 
     async handleSubmit(e) {
@@ -62,8 +63,8 @@ class Timeline extends Component {
         this.setState({tweet: e.target.value})
     }
 
-    refresh() {
-        console.log('atualiza');
+    async refresh() {
+        await this.props.list();
     }
 
     render() {
@@ -80,7 +81,7 @@ class Timeline extends Component {
                     />
                     <button type="submit" style={styles.submit}>Tweet</button>
                 </form>
-                <button onClick={this.refresh.bind(this)} style={styles.refresh}>Atualizar</button>
+                <button disabled={!this.state.tweet} onClick={this.refresh.bind(this)} style={styles.refresh}>Atualizar</button>
                 <Tweets tweets={this.props.tweets.data}/>
             </div>
         )

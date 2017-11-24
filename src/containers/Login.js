@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom'
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { Link } from 'react-router-dom';
 import '../index.css';
+import { login, getUser } from '../redux/modules/auth';
 
 const styles = {
     form: {
@@ -28,7 +31,7 @@ const styles = {
     }
 }
 
-export default class Login extends Component {
+class Login extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -37,15 +40,25 @@ export default class Login extends Component {
         }
     }
 
+    componentWillMount() {
+        const user = getUser();
+        if (user) {
+            this.props.history.push('/timeline');  
+        }    
+    }
+
     stateOnChange(key, e) {
         this.setState({
             [key]: e.target.value,
         });
     }
 
-    formSubmit(e) {
+    async formSubmit(e) {
         e.preventDefault();
-        this.props.history.push('/timeline');
+        await this.props.login(this.state);
+        if (!this.props.auth.error) {
+            this.props.history.push('/timeline');
+        }
     }
 
     render() {
@@ -82,3 +95,13 @@ export default class Login extends Component {
         );
     }
 }
+
+const mapStateToProps = state => ({
+    auth: state.auth
+});
+
+const mapDispatchToProps = dispatch => bindActionCreators({
+    login
+}, dispatch);
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login);

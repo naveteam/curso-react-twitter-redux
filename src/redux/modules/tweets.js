@@ -35,10 +35,9 @@ export default function reducer(state = INITIAL_STATE, action){
             };
         }
         case CREATE_TWEET_SUCCESS:
-            const newState = state.unshift(action.payload);
-            console.log(newState);
+            const newState = [action.payload].concat(state.data);
             return {
-                state: newState,
+                data: newState,
                 loading: false,
                 error: true
             }

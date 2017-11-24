@@ -13,7 +13,9 @@ const UPDATE_SUCCESS = 'UPDATE_SUCCESS';
 const INITIAL_STATE = {
     user: {
         name: '',
-        email: ''
+        email: '',
+        password: '',
+        id: null
     },
     loading: false,
     error: false,
@@ -58,16 +60,29 @@ export default function reducer(state = INITIAL_STATE, action) {
 export function login(user){
     return dispatch => {
         dispatch({type: LOGIN});
-        loginUser(user)
-            .then(res => dispatch({type: LOGIN_SUCCESS, payload: res.data}))
+        return loginUser(user)
+            .then(res => {
+                setUser(res.data);
+            })
             .catch(error => dispatch({type: LOGIN_FAIL}))
     }
+}
+
+export function setUser(user) {
+    localStorage.setItem('user', JSON.stringify(user));
+    return dispatch => {
+        dispatch({type: LOGIN_SUCCESS, payload: user});
+    }
+}
+
+export function getUser(){
+    return JSON.parse(localStorage.getItem('user'));
 }
 
 export function register(user) {
     return dispatch => {
         dispatch({type: REGISTER});
-        signUp(user)
+        return signUp(user)
             .then(res => dispatch({type: REGISTER_SUCCESS}))
             .catch(error => dispatch({type: REGISTER_FAIL}))
     }
@@ -76,8 +91,11 @@ export function register(user) {
 export function update(user) {
     return dispatch => {
         dispatch({type: UPDATE});
-        updateUser(user)
-            .then(res => dispatch({type: UPDATE_SUCCESS, payload: res.data}))
+        return updateUser(user)
+            .then(res => {
+                setUser(res.data);
+                dispatch({type: UPDATE_SUCCESS, payload: res.data})
+            })
             .catch(error => dispatch({type: UPDATE_FAIL}));
     }
 }

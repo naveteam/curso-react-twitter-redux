@@ -91,7 +91,17 @@ class SignUp extends Component {
                             required
                         />
                     </label>
-                    <button style={styles.submit} type="submit">Cadastrar</button>
+                    <button 
+                        style={styles.submit}
+                        disabled    ={
+                            !this.state.name || 
+                            !this.state.email || 
+                            !this.state.password
+                        } 
+                        type="submit"
+                    >
+                        Cadastrar
+                    </button>
                     <Link style={styles.link} to="/">Login</Link>
                 </form>
             </div>
