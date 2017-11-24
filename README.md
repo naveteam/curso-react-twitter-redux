@@ -1,4 +1,4 @@
-## Projeto final curso de react sem redux
+## Projeto final curso de react com redux
 
 Instale as dependências:
 
