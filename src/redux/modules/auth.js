@@ -12,7 +12,7 @@ const UPDATE_SUCCESS = 'UPDATE_SUCCESS';
 
 const INITIAL_STATE = {
     user: {
-        username: '',
+        name: '',
         email: ''
     },
     loading: false,
@@ -68,7 +68,7 @@ export function register(user) {
     return dispatch => {
         dispatch({type: REGISTER});
         signUp(user)
-            .then(res => dispatch({type: REGISTER_SUCCESS, payload: res.data}))
+            .then(res => dispatch({type: REGISTER_SUCCESS}))
             .catch(error => dispatch({type: REGISTER_FAIL}))
     }
 }

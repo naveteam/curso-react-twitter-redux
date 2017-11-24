@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import { Link } from 'react-router-dom'
+import { register } from '../redux/modules/auth';
 import '../index.css';
 
 const styles = {
@@ -28,11 +31,11 @@ const styles = {
     }
 }
 
-export default class SignUp extends Component {
+class SignUp extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            username: '',
+            name: '',
             email: '',
             password: ''
         }
@@ -44,9 +47,12 @@ export default class SignUp extends Component {
         });
     }
 
-    formSubmit(e) {
+    async formSubmit(e) {
         e.preventDefault();
-        this.props.history.push('/');
+        await this.props.register(this.state);
+        if (!this.props.user.error) {
+            this.props.history.push('/');
+        }
     }
 
     render() {
@@ -60,13 +66,13 @@ export default class SignUp extends Component {
                     <label htmlFor="name">
                         <span>Nome de usuário:</span>
                         <input 
-                            value={this.state.username} 
-                            onChange={this.stateOnChange.bind(this, 'username')} 
+                            value={this.state.name} 
+                            onChange={this.stateOnChange.bind(this, 'name')} 
                             type="text" placeholder="Demogorgon"
                             required
                         />
                     </label>
-                    <label htmlFor="name">
+                    <label htmlFor="email">
                         <span>Email:</span>
                         <input 
                             value={this.state.email} 
@@ -92,3 +98,14 @@ export default class SignUp extends Component {
         )
     }
 }
+
+
+const mapStateToProps = state => ({
+    user: state.auth
+});
+
+const mapDispatchToProps = dispatch => bindActionCreators({
+    register
+}, dispatch);
+
+export default connect(mapStateToProps, mapDispatchToProps)(SignUp)

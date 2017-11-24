@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import Tweets from '../components/Tweets';
+import { list, create } from '../redux/modules/tweets';
 
 const styles = {
     timeline: {
@@ -36,7 +39,7 @@ const styles = {
     }
 }
 
-export default class Timeline extends Component {
+class Timeline extends Component {
     constructor(props){
         super(props);
         this.state = {
@@ -44,8 +47,15 @@ export default class Timeline extends Component {
         }
     }
 
-    handleSubmit(e) {
+    async componentWillMount(){
+        await this.props.list();
+    }
+
+    async handleSubmit(e) {
         e.preventDefault();
+        // this.props.create({userId: this.props.user.id, text: this.state.tweet});
+        await this.props.create({userId: 1, text: this.state.tweet});
+        this.setState({tweet: ''});
     }
 
     handleChange(e) {
@@ -61,7 +71,7 @@ export default class Timeline extends Component {
             <div style={styles.timeline}>
                 <form onSubmit={this.handleSubmit.bind(this)} style={styles.form}>
                     <textarea
-                        value={this.state.value}
+                        value={this.state.tweet}
                         onChange={this.handleChange.bind(this)}
                         style={styles.newTweet}
                         name="newTweet"
@@ -71,8 +81,20 @@ export default class Timeline extends Component {
                     <button type="submit" style={styles.submit}>Tweet</button>
                 </form>
                 <button onClick={this.refresh.bind(this)} style={styles.refresh}>Atualizar</button>
-                <Tweets tweets={[{username: 'teste', text: 'AEHOOOOOO'}]}/>
+                <Tweets tweets={this.props.tweets.data}/>
             </div>
         )
     }
 }
+
+const mapStateToProps = state => ({
+    tweets: state.tweets,
+    user: state.auth.user
+});
+
+const mapDispatchToProps = dispatch => bindActionCreators({
+    list,
+    create
+}, dispatch);
+
+export default connect(mapStateToProps, mapDispatchToProps)(Timeline);

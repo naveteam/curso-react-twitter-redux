@@ -35,8 +35,10 @@ export default function reducer(state = INITIAL_STATE, action){
             };
         }
         case CREATE_TWEET_SUCCESS:
+            const newState = state.unshift(action.payload);
+            console.log(newState);
             return {
-                state: state.unshift(action.payload),
+                state: newState,
                 loading: false,
                 error: true
             }
@@ -49,7 +51,10 @@ export function create(data) {
     return dispatch => {
         dispatch({type: CREATE_TWEET});
         createTweet(data)
-            .then(res => dispatch({type: CREATE_TWEET_SUCCESS, payload: res.data}))
+            .then(res => {
+                console.log(res);
+                dispatch({type: CREATE_TWEET_SUCCESS, payload: res.data})
+            })
             .catch(error => dispatch({type: CREATE_TWEET_FAIL}))
     }
 }
