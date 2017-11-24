@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Tweets from './Tweets';
+import Tweets from '../components/Tweets';
 
 const styles = {
     timeline: {
