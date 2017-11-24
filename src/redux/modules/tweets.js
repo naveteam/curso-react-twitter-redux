@@ -51,10 +51,7 @@ export function create(data) {
     return dispatch => {
         dispatch({type: CREATE_TWEET});
         createTweet(data)
-            .then(res => {
-                console.log(res);
-                dispatch({type: CREATE_TWEET_SUCCESS, payload: res.data})
-            })
+            .then(res => dispatch({type: CREATE_TWEET_SUCCESS, payload: res.data}))
             .catch(error => dispatch({type: CREATE_TWEET_FAIL}))
     }
 }
